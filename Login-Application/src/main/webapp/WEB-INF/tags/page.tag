@@ -1,5 +1,5 @@
-<%@tag description="Default Page template" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@tag description="Page Template" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@attribute name="title" required="false" %>
  
@@ -10,11 +10,12 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Allow for each jsp view using this tag to append it's name to the title of "Login Application | TITLE" -->
         <title>Login Application | <c:out value="${!empty title ? title : ''}"/></title>
+        <!-- Using Bootstrap CDN for the quick prototyping of page styling and design -->
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-        <%-- <link href="${pageContext.request.contextPath}/assets/css/style.css" rel="stylesheet" --%>
+        <style><%@include file="../jsp/css/style.css"%></style>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -30,26 +31,50 @@
             <div class="header">
      
                 <ul class="nav nav-pills pull-right">
+                    <%-- Set variable 'uri' for checking the servlet jsp view that the user is currently on --%>
                     <c:set var="uri" value="${requestScope['javax.servlet.forward.request_uri']}"/>
-                    <li<c:if test="${fn:endsWith(uri,'/')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/Home">Home</a></li>
-     
-                    <%-- Change upper right context menu depending on if the user is logged in or not: --%>
+                    <%-- Show Home as active if uri ends with "/Home" --%>
+                    <li<c:if test="${fn:endsWith(uri,'Home')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/Home">Home</a></li>
+
+                    <%-- Change upper right context menu depending on if the user is logged in or not --%>
                     <c:choose>
                         <c:when test="${!empty account}">
-                            <li<c:if test="${fn:endsWith(uri,'dashboard')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/dashboard">Dashboard</a></li>
+                            <%-- When user is logged in show Logged-In as active if uri ends with "/Logged-In" and Logout as inactive --%>
+                            <li<c:if test="${fn:endsWith(uri,'Logged-In')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/Logged-In">Logged-In</a></li>
                             <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
                         </c:when>
                         <c:otherwise>
+                            <%-- When user is not logged in show Register as active if uri ends with "/Register" and Login as active if uri ends with "/Login" --%>
+                            <li<c:if test="${fn:endsWith(uri,'Register')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/Register">Register</a></li>
                             <li<c:if test="${fn:endsWith(uri,'Login')}"> class="active"</c:if>><a href="${pageContext.request.contextPath}/Login">Login</a></li>
                         </c:otherwise>
                     </c:choose>
                 </ul>
      
                 <h3 class="text-muted">Login Application</h3>
-     
+                
+                
+                
+                <!-- TEMPORARY - FOR TESTING JSP VARIABLE VALUES - SIMPLY UN-COMMENT THESE OUT FOR DEBUGGING
+                <section class="TEMP">
+                    <c:if test="${!empty title}"> <c:out value="Title: ${title}"/> <br/> </c:if>
+                    <c:if test="${!empty account}"> <c:out value="Account: ${account}"/> <br/> </c:if>
+                    <c:if test="${empty account}"> <c:out value="Account: null"/> <br/> </c:if>
+                    <c:if test="${!empty uri}"> <c:out value="URI: ${uri}"/> <br/> </c:if>
+                </section>
+                -->
+                
+                
+                
             </div>
-     
+            
+            <br>
+            
+            <div class="jumbotron" id="main">
+
             <jsp:doBody/>
+            
+            </div>
      
         </div>
     </body>

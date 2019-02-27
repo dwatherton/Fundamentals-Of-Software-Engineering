@@ -5,11 +5,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
  
     <servlet>
-        <servlet-name>HomeServlet</servlet-name>
+        <servlet-name>Home</servlet-name>
         <servlet-class>HomeServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
+        <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
     
@@ -29,6 +29,16 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>Logged-In</servlet-name>
+        <servlet-class>LoggedInServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Logged-In</servlet-name>
+        <url-pattern>/Logged-In</url-pattern>
     </servlet-mapping>
  
 </web-app>

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +21,35 @@ public class LoginServlet extends HttpServlet
         request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
     }
     
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        processRequest(request, response);
+    }
+    
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        // Temporary method filler - Proof Of Concept - REMOVE IN FINAL PRODUCT!!!
+        PrintWriter out = response.getWriter();
+        String parameterValue = request.getParameter("userID");
+        out.write("userID: " + parameterValue + "\n");
+        parameterValue = request.getParameter("password");
+        out.write("password: " + parameterValue + "\n");
+        parameterValue = request.getParameter("name");
+        out.write("name: " + parameterValue + "\n");
+        parameterValue = request.getParameter("securityQuestion");
+        out.write("securityQuestion: " + parameterValue + "\n");
+        parameterValue = request.getParameter("submit");
+        out.write("submit: " + parameterValue + "\n");
+        parameterValue = request.getRequestURI();
+        out.write("request URI: " + parameterValue + "\n");
         
+        // Verify User Credentials HERE!!!
+        
+        // Send User To /Logged-In After Identity Verified!!!
+        if (request.getParameter("submit").equals("Submit"))
+        {
+            response.sendRedirect("/Logged-In");        
+        }
     }
 }

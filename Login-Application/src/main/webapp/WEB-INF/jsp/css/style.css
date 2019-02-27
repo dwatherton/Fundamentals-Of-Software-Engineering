@@ -1,0 +1,40 @@
+/* For overriding some of the BootStrap CDN styles with my own */
+/*
+
+body {
+    background-color: black;
+}
+
+.container {
+    width: 1000px;
+    height: auto;
+}
+
+.header {
+    height: 35px;
+}
+
+.nav li {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+
+.nav ul li:hover {
+    background-color: gray;
+}
+
+.nav li a {
+    padding: 7px 15px;
+}
+
+.text-muted {
+    color: white;
+    padding-top: 5px;
+}
+
+.TEMP {
+    color: red;
+}
+
+*/
