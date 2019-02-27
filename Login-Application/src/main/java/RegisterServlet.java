@@ -1,5 +1,8 @@
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,10 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "RegisterServlet")
 public class RegisterServlet extends HttpServlet
 {
-    static final long serialVersionUID = 2L;
-    
-    private LoginService loginService = new LoginService();
-    
+    private static final long serialVersionUID = 2L;    
     public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/register.jsp";
  
     @Override
@@ -29,19 +29,54 @@ public class RegisterServlet extends HttpServlet
     
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // Temporary method filler - Proof Of Concept - REMOVE IN FINAL PRODUCT!!!
         PrintWriter out = response.getWriter();
-        String parameterValue = request.getParameter("userID");
-        out.write("userID: " + parameterValue + "\n");
-        parameterValue = request.getParameter("password");
-        out.write("password: " + parameterValue + "\n");
-        parameterValue = request.getParameter("name");
-        out.write("name: " + parameterValue + "\n");
-        parameterValue = request.getParameter("securityQuestion");
-        out.write("securityQuestion: " + parameterValue + "\n");
-        parameterValue = request.getParameter("submit");
-        out.write("submit: " + parameterValue + "\n");
-        parameterValue = request.getRequestURI();
-        out.write("request URI: " + parameterValue + "\n");
+        boolean registrationSubmitted = request.getParameter("submit").equals("Submit");
+        
+        // Check user clicked Submit AND NONE OF THE FIELDS ARE LEFT EMPTY/NULL!
+        if (registrationSubmitted)
+        {
+            try
+            {
+                // Establish Database Connection - Creates Database & Table If not already Created
+                Connection connection = DatabaseConnection.initializeUsersDatabase();
+                
+                // Create Template for Statement with 4 Columns in user table
+                PreparedStatement sql = connection.prepareStatement("insert into user values(?, ?, ?, ?)");
+                
+                // Add the four fields inserted to the registration into the insert statement
+                sql.setString(1, String.valueOf(request.getParameter("userID")));
+                sql.setString(2, String.valueOf(request.getParameter("password")));
+                sql.setString(3, String.valueOf(request.getParameter("name")));
+                sql.setString(4, String.valueOf(request.getParameter("securityQuestion")));
+                
+                // Execute the sql
+                sql.executeUpdate();
+                
+                // Close connections
+                sql.close();
+                connection.close();
+                
+                // Temporary for checking the values successfully inserted into Database
+                out.println("<html><body><h1>Successfully Inserted</h1>");
+                String parameterValue = request.getParameter("userID");
+                out.write("userID: " + parameterValue + "<br/>");
+                parameterValue = request.getParameter("password");
+                out.write("password: " + parameterValue + "<br/>");
+                parameterValue = request.getParameter("name");
+                out.write("name: " + parameterValue + "<br/>");
+                parameterValue = request.getParameter("securityQuestion");
+                out.write("securityQuestion: " + parameterValue + "<br/></body></html>");
+            }
+            catch (SQLException e)
+            {
+                out.write("Exception Thrown: " + e.getMessage() + "\n");
+                out.write("Stack Trace: " + e.getStackTrace() + "\n");
+            }            
+            catch (ClassNotFoundException e)
+            {
+                out.write("Exception Thrown: " + e.getMessage() + "\n");
+                out.write("Stack Trace: " + e.getStackTrace() + "\n");
+            }
+        }
     }
 }
