@@ -10,8 +10,6 @@ public class LoggedInServlet extends HttpServlet
 {
     static final long serialVersionUID = 4L;
     
-    private LoginService loginService = new LoginService();
-    
     public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/logged-in.jsp";
  
     @Override

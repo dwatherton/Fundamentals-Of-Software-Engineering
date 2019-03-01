@@ -22,4 +22,8 @@ public class User
     @Getter
     @Setter
     private String securityQuestion;
+    
+    @Getter
+    @Setter
+    private String securityAnswer;
 }

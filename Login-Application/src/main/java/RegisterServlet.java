@@ -30,7 +30,7 @@ public class RegisterServlet extends HttpServlet
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         PrintWriter out = response.getWriter();
-        boolean registrationSubmitted = request.getParameter("submit").equals("Submit");
+        boolean registrationSubmitted = request.getParameter("register").equals("Register");
         
         // Check user clicked Submit AND NONE OF THE FIELDS ARE LEFT EMPTY/NULL!
         if (registrationSubmitted)
@@ -38,16 +38,17 @@ public class RegisterServlet extends HttpServlet
             try
             {
                 // Establish Database Connection - Creates Database & Table If not already Created
-                Connection connection = DatabaseConnection.initializeUsersDatabase();
+                Connection connection = DatabaseConnection.initializeDatabase();
                 
                 // Create Template for Statement with 4 Columns in user table
-                PreparedStatement sql = connection.prepareStatement("insert into user values(?, ?, ?, ?)");
+                PreparedStatement sql = connection.prepareStatement("insert into `users` values(?, ?, ?, ?, ?)");
                 
                 // Add the four fields inserted to the registration into the insert statement
                 sql.setString(1, String.valueOf(request.getParameter("userID")));
                 sql.setString(2, String.valueOf(request.getParameter("password")));
                 sql.setString(3, String.valueOf(request.getParameter("name")));
                 sql.setString(4, String.valueOf(request.getParameter("securityQuestion")));
+                sql.setString(5, String.valueOf(request.getParameter("securityAnswer")));
                 
                 // Execute the sql
                 sql.executeUpdate();
@@ -65,7 +66,10 @@ public class RegisterServlet extends HttpServlet
                 parameterValue = request.getParameter("name");
                 out.write("name: " + parameterValue + "<br/>");
                 parameterValue = request.getParameter("securityQuestion");
-                out.write("securityQuestion: " + parameterValue + "<br/></body></html>");
+                out.write("securityQuestion: " + parameterValue + "<br/>");
+                parameterValue = request.getParameter("securityAnswer");
+                out.write("securityAnswer: " + parameterValue + "<br/></body></html>");
+                
             }
             catch (SQLException e)
             {

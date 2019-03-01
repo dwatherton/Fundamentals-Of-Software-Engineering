@@ -7,31 +7,53 @@
     <jsp:attribute name="title">Register</jsp:attribute>
     <jsp:body>
 
-        <form action="${pageContext.request.contextPath}/Register" method="post">
+        <form class="form-container" action="${pageContext.request.contextPath}/Register" method="post">
+            <section class="form">
 
-            <table>
-                <tr>User ID: </tr>
-                <input type="text" name="userID">
-                <br/>
+                <h3 class="form-header">Register</h3>
+                
 
-                <tr>Password: </tr>
-                <input type="password" name="password">
-                <br/>
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">User ID: </label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" name="userID" placeholder="User ID">
+					</div>
+				</div>
+				
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Password: </label>
+					<div class="col-sm-9">
+						<input class="form-control" type="password" name="password" placeholder="Password">
+					</div>
+				</div>
+                
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Name: </label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" name="name" placeholder="Name">
+					</div>
+				</div>
+				
+				<div class="form-group row">
+					<label class="col-sm-3 col-form-label">Security Question: </label>
+					<div class="col-sm-9">
+						<select class="form-control" name="securityQuestion">
+						    <option value="What is your mothers maiden name?">What is your mothers maiden name?</option>
+                            <option value="What city were you born in?">What city were you born in?</option>
+						</select>
+					</div>
+				</div>
+        
+                <div class="form-group row">
+					<label class="col-sm-3 col-form-label">Security Answer: </label>
+					<div class="col-sm-9">
+						<input class="form-control" type="text" name="securityAnswer" placeholder="Security Answer">
+					</div>
+				</div>
 
-                <tr>Name: </tr>
-                <input type="text" name="name">
-                <br/>
-
-                <tr>Security Question </tr>
-                <select multiple="true" size="2" name="securityQuestion">
-                    <option value="What is your mothers maiden name?">What is your mothers maiden name?</option>
-                    <option value="What city were you born in?">What city were you born in?</option>
-                </select>
-                <br/>
-
-                <input type="submit" name="submit" value="Submit" />
-            </table>
-
+                <input class="form-button" type="submit" name="register" value="Register">
+                
+            </section>
         </form>
 
     </jsp:body>

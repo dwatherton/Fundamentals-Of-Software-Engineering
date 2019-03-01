@@ -5,31 +5,36 @@ import java.sql.SQLException;
 
 public class DatabaseConnection
 {
-    protected static Connection initializeUsersDatabase() throws SQLException, ClassNotFoundException
+    protected static Connection initializeDatabase() throws SQLException, ClassNotFoundException
     {
         final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://db:3306/";
         
-        final String USER = "daniel_atherton";
-        final String PASSWORD = "password";
+        final String USER = "user";
+        final String PASSWORD = "pass";
         
+        // Establish Database Connection
         Class.forName(JDBC_DRIVER);
         Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
         
-        // Create 'users' Database
-        PreparedStatement createDatabase = connection.prepareStatement("create database if not exists users;");
+        // Create 'login-application' Database
+        PreparedStatement createDatabase = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS `login-application`;");
         createDatabase.executeUpdate();
         createDatabase.close();
         
-        // Use 'users' Database
-        PreparedStatement userDatabase = connection.prepareStatement("use users;");
+        // Use 'login-application' Database
+        PreparedStatement userDatabase = connection.prepareStatement("USE `login-application`;");
         userDatabase.executeUpdate();
         userDatabase.close();
         
-        // Create Table 'user' in users Database
-        PreparedStatement createTable = connection.prepareStatement("create table if not exists user (userID varchar(120) NOT NULL, password varchar(120) NOT NULL, name varchar(120) NOT NULL, securityQuestion varchar(120) NOT NULL, PRIMARY KEY(userID));");
+        // Create Table 'users' in 'login-application' Database
+        PreparedStatement createTable = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `users` (userID VARCHAR(120) NOT NULL, password VARCHAR(120) NOT NULL, name VARCHAR(120) NOT NULL, securityQuestion VARCHAR(120) NOT NULL, securityAnswer VARCHAR(120) NOT NULL, PRIMARY KEY(userID));");
         createTable.executeUpdate();
         createTable.close();
+        
+        // Potential Solution for persistence - Upon Registration, Save User info to file, then parse the file here
+        // looping through each line, and create an sql statement to insert a user into the db with the values
+        // read in from file
 
         return connection;
     }

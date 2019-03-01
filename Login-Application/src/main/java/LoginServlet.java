@@ -11,8 +11,6 @@ public class LoginServlet extends HttpServlet
 {
     static final long serialVersionUID = 3L;
     
-    private LoginService loginService = new LoginService();
-    
     public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/login.jsp";
  
     @Override
@@ -47,7 +45,7 @@ public class LoginServlet extends HttpServlet
         // Verify User Credentials HERE!!!
         
         // Send User To /Logged-In After Identity Verified!!!
-        if (request.getParameter("submit").equals("Submit"))
+        if (request.getParameter("login").equals("Login"))
         {
             response.sendRedirect("/Logged-In");        
         }
