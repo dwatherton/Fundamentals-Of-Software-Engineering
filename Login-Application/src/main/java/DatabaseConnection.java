@@ -17,17 +17,17 @@ public class DatabaseConnection
         Class.forName(JDBC_DRIVER);
         Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
         
-        // Create 'login-application' Database
-        PreparedStatement createDatabase = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS `login-application`;");
+        // Create 'login_application' Database
+        PreparedStatement createDatabase = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS `login_application`;");
         createDatabase.executeUpdate();
         createDatabase.close();
         
-        // Use 'login-application' Database
-        PreparedStatement userDatabase = connection.prepareStatement("USE `login-application`;");
+        // Use 'login_application' Database
+        PreparedStatement userDatabase = connection.prepareStatement("USE `login_application`;");
         userDatabase.executeUpdate();
         userDatabase.close();
         
-        // Create Table 'users' in 'login-application' Database
+        // Create Table 'users' in 'login_application' Database
         PreparedStatement createTable = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `users` (userID VARCHAR(120) NOT NULL, password VARCHAR(120) NOT NULL, name VARCHAR(120) NOT NULL, securityQuestion VARCHAR(120) NOT NULL, securityAnswer VARCHAR(120) NOT NULL, PRIMARY KEY(userID));");
         createTable.executeUpdate();
         createTable.close();

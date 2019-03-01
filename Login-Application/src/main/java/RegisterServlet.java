@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "RegisterServlet")
 public class RegisterServlet extends HttpServlet
@@ -35,8 +36,16 @@ public class RegisterServlet extends HttpServlet
         // Check user clicked Submit AND NONE OF THE FIELDS ARE LEFT EMPTY/NULL!
         if (registrationSubmitted)
         {
+            // Create a user from the registration information
+            User user = new User();
+            user.setUserID(request.getParameter("userID"));
+            user.setPassword(request.getParameter("password"));
+            user.setName(request.getParameter("name"));
+            user.setSecurityQuestion(request.getParameter("securityQuestion"));
+            user.setSecurityAnswer(request.getParameter("securityAnswer"));
+                
             try
-            {
+            {                
                 // Establish Database Connection - Creates Database & Table If not already Created
                 Connection connection = DatabaseConnection.initializeDatabase();
                 
@@ -44,11 +53,11 @@ public class RegisterServlet extends HttpServlet
                 PreparedStatement sql = connection.prepareStatement("insert into `users` values(?, ?, ?, ?, ?)");
                 
                 // Add the four fields inserted to the registration into the insert statement
-                sql.setString(1, String.valueOf(request.getParameter("userID")));
-                sql.setString(2, String.valueOf(request.getParameter("password")));
-                sql.setString(3, String.valueOf(request.getParameter("name")));
-                sql.setString(4, String.valueOf(request.getParameter("securityQuestion")));
-                sql.setString(5, String.valueOf(request.getParameter("securityAnswer")));
+                sql.setString(1, user.getUserID());
+                sql.setString(2, user.getPassword());
+                sql.setString(3, user.getName());
+                sql.setString(4, user.getSecurityQuestion());
+                sql.setString(5, user.getSecurityAnswer());
                 
                 // Execute the sql
                 sql.executeUpdate();
@@ -81,6 +90,22 @@ public class RegisterServlet extends HttpServlet
                 out.write("Exception Thrown: " + e.getMessage() + "\n");
                 out.write("Stack Trace: " + e.getStackTrace() + "\n");
             }
+            
+            // Create an HttpSession
+            HttpSession session = request.getSession();
+            
+            // Set account Attribute to the users unique userID and registered/loggedin Attribute to true
+            session.setAttribute("account", request.getParameter("userID"));
+            session.setAttribute("registered", true);
+            session.setAttribute("loggedin", true);
+            session.setAttribute("userID", user.getUserID());
+            session.setAttribute("password", user.getPassword());
+            session.setAttribute("name", user.getName());
+            session.setAttribute("securityQuestion", user.getSecurityQuestion());
+            session.setAttribute("securityAnswer", user.getSecurityAnswer());
+            
+            // Redirect user to /Home
+            response.sendRedirect("/Home");            
         }
     }
 }

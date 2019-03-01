@@ -1,50 +1,9 @@
 /* For overriding some of the BootStrap CDN styles with my own */
-/*
-
-body {
-    background-color: black;
-}
-
-.container {
-    width: 1000px;
-    height: auto;
-}
-
-.header {
-    height: 35px;
-}
-
-.nav li {
-    background-color: black;
-    border: 1px solid white;
-    border-radius: 4px;
-}
-
-.nav ul li:hover {
-    background-color: gray;
-}
-
-.nav li a {
-    padding: 7px 15px;
-}
-
-.text-muted {
-    color: white;
-    padding-top: 5px;
-}
-
-.TEMP {
-    color: red;
-}
-
-*/
-
-
 
 /***    Form Styles    ***/
 
-  .form-container {
-    padding: 10px;
+.form-container {
+	padding: 10px;
 }
 
 .form {
@@ -62,7 +21,7 @@ body {
 }
 
 .col-sm-3 {
-    padding-top: 8px;
+	padding-top: 8px;
 	padding-left: 45px;
 }
 
@@ -71,7 +30,7 @@ body {
 }
 
 .form-button {
-    width: 115px;
+	width: 115px;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -86,6 +45,7 @@ body {
 	border-radius: 10px;
 	box-shadow: 0 5px #999;
 }
+
 .form-button:hover {
 	background-color: rgb(35, 145, 255);
 	color: #FFF;
