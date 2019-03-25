@@ -67,6 +67,8 @@
                     <c:if test="${registered}"> <c:out value="Registered: ${registered}"/> <br/> </c:if>
                     <c:if test="${!loggedin}"> <c:out value="Logged In: null"/> <br/> </c:if>
                     <c:if test="${loggedin}"> <c:out value="Logged In: ${loggedin}"/> <br/> </c:if>
+                    <c:if test="${!fieldEmpty}"> <c:out value="Field Empty: ${fieldEmpty}"/> <br/> </c:if>
+                    <c:if test="${fieldEmpty}"> <c:out value="Field Empty: $"/> <br/> </c:if>
                     <c:if test="${!empty uri}"> <c:out value="URI: ${uri}"/> <br/> </c:if>
                 </section>
             

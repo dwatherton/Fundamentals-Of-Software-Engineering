@@ -19,9 +19,11 @@ public class HomeServlet extends HttpServlet
         String account = (String)session.getAttribute("account");
         Boolean registered = (Boolean)session.getAttribute("registered");
         Boolean loggedin = (Boolean)session.getAttribute("loggedin");
+        Boolean fieldEmpty = (Boolean)session.getAttribute("fieldEmpty");
         request.setAttribute("account", account);
         request.setAttribute("registered", registered);
         request.setAttribute("loggedin", loggedin);
+        request.setAttribute("fieldEmpty", fieldEmpty);
 
         request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
     }

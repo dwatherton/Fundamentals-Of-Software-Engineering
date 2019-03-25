@@ -1,5 +1,21 @@
 /* For overriding some of the BootStrap CDN styles with my own */
 
+
+
+
+
+/***    Jumbotron Styles    ***/
+
+.jumbotron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
 /***    Form Styles    ***/
 
 .form-container {
@@ -7,7 +23,7 @@
 }
 
 .form {
-	max-width: 750px;
+	width: 750px;
 	margin: 30px auto;
 	border: 1px solid black;
 	border-radius: 15px;
@@ -32,8 +48,7 @@
 .form-button {
 	width: 115px;
 	display: block;
-	margin-left: auto;
-	margin-right: auto;
+	margin: 30px auto 15px auto;
 	padding: 10px;
 	font-size: 16px;
 	cursor: pointer;
