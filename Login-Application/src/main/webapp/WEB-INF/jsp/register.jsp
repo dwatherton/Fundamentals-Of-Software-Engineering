@@ -65,6 +65,62 @@
 				
 			</c:when>
 			
+			<c:when test="${userIdTaken}">
+			
+			    <h3>The UserID entered is already taken, please try a new UserID!!!</h3>
+				
+				<form class="form-container" action="${pageContext.request.contextPath}/Register" method="post">
+				
+				    <section class="form">
+
+				    <h3 class="form-header">Register</h3>
+
+    				<div class="form-group row">
+    					<label class="col-sm-3 col-form-label">User ID: </label>
+    					<div class="col-sm-9">
+    						<input class="form-control" type="text" name="userID" placeholder="User ID">
+    					</div>
+    				</div>
+
+    				<div class="form-group row">
+    					<label class="col-sm-3 col-form-label">Password: </label>
+    					<div class="col-sm-9">
+    						<input class="form-control" type="password" name="password" placeholder="Password">
+    					</div>
+    				</div>
+    
+    				<div class="form-group row">
+    					<label class="col-sm-3 col-form-label">Name: </label>
+    					<div class="col-sm-9">
+    						<input class="form-control" type="text" name="name" placeholder="Name">
+    					</div>
+    				</div>
+
+    				<div class="form-group row">
+    					<label class="col-sm-3 col-form-label">Security Question: </label>
+    					<div class="col-sm-9">
+    						<select class="form-control" name="securityQuestion">
+    							<option value="What is your mothers maiden name?">What is your mothers maiden name?</option>
+    							<option value="What city were you born in?">What city were you born in?</option>
+    						</select>
+    					</div>
+    				</div>
+    
+    				<div class="form-group row">
+    					<label class="col-sm-3 col-form-label">Security Answer: </label>
+    					<div class="col-sm-9">
+    						<input class="form-control" type="text" name="securityAnswer" placeholder="Security Answer">
+    					</div>
+    				</div>
+    
+    				<input class="form-button" type="submit" name="register" value="Register">
+    				
+    			    </section>
+    			    
+    		    </form>
+			
+			</c:when>
+			
 			<c:otherwise>
 				
         		<form class="form-container" action="${pageContext.request.contextPath}/Register" method="post">
