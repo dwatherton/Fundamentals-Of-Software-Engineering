@@ -18,8 +18,6 @@ public class LoginServlet extends HttpServlet
     static final long serialVersionUID = 3L;
     
     public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/login.jsp";
-    
-    private static LoginService loginService = new LoginService();
  
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
