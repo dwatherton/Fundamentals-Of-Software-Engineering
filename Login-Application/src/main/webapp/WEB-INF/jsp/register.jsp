@@ -11,7 +11,10 @@
         
 			<c:when test="${fieldEmpty}">
 			
-				<h3>Please provide information for ALL fields below!!!</h3>
+			    <%-- Uncomment the line below for JavaScript Alert to try a new UserID --%>
+			    <%-- <script> alert("Please provide information for ALL fields on the Registration Form") </script> --%>
+			
+				<h3 class="error">Please provide information for ALL fields below!!!</h3>
 				
 				<form class="form-container" action="${pageContext.request.contextPath}/Register" method="post">
 				
@@ -67,7 +70,10 @@
 			
 			<c:when test="${userIdTaken}">
 			
-			    <h3>The UserID entered is already taken, please try a new UserID!!!</h3>
+			    <%-- Uncomment the line below for JavaScript Alert to try a new UserID --%>
+			    <%-- <script> alert("The UserID entered is already taken, please try a new UserID!!!") </script> --%>
+			
+			    <h3 class="error">The UserID entered is already taken, please try a new UserID!!!</h3>
 				
 				<form class="form-container" action="${pageContext.request.contextPath}/Register" method="post">
 				

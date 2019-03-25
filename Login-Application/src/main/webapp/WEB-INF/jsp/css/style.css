@@ -8,8 +8,14 @@
 
 .jumbotron {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+}
+
+.error {
+    color: red;
+    text-decoration: underline;
 }
 
 
