@@ -24,6 +24,9 @@ public class LoginServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        
         request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
     }
     
