@@ -24,13 +24,19 @@ public class RegisterServlet extends HttpServlet
         // Get the current session
         HttpSession session = request.getSession();
         
-        // Set fieldEmpty for making sure user entered ALL fields
-        Boolean fieldEmpty = (Boolean)session.getAttribute("fieldEmpty");
-        request.setAttribute("fieldEmpty", fieldEmpty);
+        // Set registrationFieldEmpty for making sure user entered ALL fields
+        Boolean registrationFieldEmpty = (Boolean)session.getAttribute("registrationFieldEmpty");
+        request.setAttribute("registrationFieldEmpty", registrationFieldEmpty);
         
         // Set userIdTaken for making sure the userID entered is not already taken
         Boolean userIdTaken = (Boolean)session.getAttribute("userIdTaken");
         request.setAttribute("userIdTaken", userIdTaken);
+        
+        // Invalidate session if user failed to login then came to register (Clears the variables set for ERROR messages on Login form )
+        if (session.getAttribute("loginFieldEmpty") != null || session.getAttribute("incorrectIdOrPassword") != null)
+        {
+            session.invalidate();
+        }
         
         request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
     }
@@ -69,8 +75,8 @@ public class RegisterServlet extends HttpServlet
                 // Get the current session
                 session = request.getSession();
                 
-                // Set an attribute for empty fields (For prompting user to fill out entire form)
-                session.setAttribute("fieldEmpty", true);
+                // Set an attribute for empty registration fields (For prompting user to fill out entire form)
+                session.setAttribute("registrationFieldEmpty", true);
                 
                 response.sendRedirect("/Register");
                 
@@ -135,8 +141,8 @@ public class RegisterServlet extends HttpServlet
                     // The UserID entered is already taken (REDIRECT TO REGISTER AND PROMPT USER TO ENTER A DIFFERENT USERID)
                     else
                     {
-                        // Get the current session
-                        session = request.getSession();
+                        // Create a new session for the registered user
+                        session = request.getSession(true);
                         
                         // Set an attribute for user ID taken (For prompting user to enter a new userID)
                         session.setAttribute("userIdTaken", true);

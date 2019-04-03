@@ -7,6 +7,22 @@
 	<jsp:attribute name="title">Login</jsp:attribute>
 	<jsp:body>
 
+        <c:choose>
+        
+			<c:when test="${loginFieldEmpty}">
+			
+				<h3 class="error">Please provide information for ALL fields below!!!</h3>
+				
+			</c:when>
+			
+			<c:when test="${incorrectIdOrPassword}">
+			
+				<h3 class="error">The userID or Password entered was incorrect... Please try again!!!</h3>
+				
+			</c:when>
+			
+		</c:choose>
+			
 		<form class="form-container" action="${pageContext.request.contextPath}/Login" method="post">
 			<section class="form">
 

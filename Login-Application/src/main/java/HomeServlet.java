@@ -23,7 +23,7 @@ public class HomeServlet extends HttpServlet
         request.setAttribute("registered", registered);
         request.setAttribute("loggedin", loggedin);
 
-        // Invalidate session if not logged in (Clears fieldEmpty attribute for Registration form)
+        // Invalidate session if not logged in (Clears the variables set for ERROR messages on Registration and Login forms)
         if (session.getAttribute("loggedin") == null)
         {
             session.invalidate();

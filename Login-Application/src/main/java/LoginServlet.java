@@ -22,8 +22,22 @@ public class LoginServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        // Get the current session
         HttpSession session = request.getSession();
-        session.invalidate();
+
+        // Set loginFieldEmpty for making sure user entered ALL fields
+        Boolean loginFieldEmpty = (Boolean)session.getAttribute("loginFieldEmpty");
+        request.setAttribute("loginFieldEmpty", loginFieldEmpty);
+        
+        // Set incorrectIdOrPassword for making sure user entered the correct login info
+        Boolean incorrectIdOrPassword = (Boolean)session.getAttribute("incorrectIdOrPassword");
+        request.setAttribute("incorrectIdOrPassword", incorrectIdOrPassword);
+        
+        // Invalidate session if user failed to register then came to login (Clears the variables set for ERROR messages on Registration form)
+        if (session.getAttribute("registrationFieldEmpty") != null || session.getAttribute("userIdTaken") != null)
+        {
+            session.invalidate();
+        }
         
         request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
     }
@@ -38,84 +52,102 @@ public class LoginServlet extends HttpServlet
     {
         PrintWriter out = response.getWriter();
         boolean loginSubmitted = request.getParameter("login").equals("Login");
+        // Create an HttpSession for Login
+        HttpSession session = request.getSession();
         boolean authenticated = false;
         String passwordEntered = "";
         
-        // Make sure the userID and password have been filled in
-        if (!request.getParameter("userID").isEmpty() && !request.getParameter("password").isEmpty())
+        // Check the user clicked Login
+        if (loginSubmitted)
         {
+            session.invalidate();
+            
             // Create a user from the login information
             User user = new User();
             user.setUserID(request.getParameter("userID"));
             user.setPassword(request.getParameter("password"));
             
-            try
-            {                
-                // Establish Database Connection - Creates Database & Table If not already Created
-                Connection connection = DatabaseConnection.initializeDatabase();
-                
-                // Create Template Statement for querying the Database for the user's information based on userID
-                PreparedStatement sql = connection.prepareStatement("select * from `users` where userID = ?");
-                
-                // Add the userID field to the select statement
-                sql.setString(1, user.getUserID());
-                
-                // Execute the sql query and get the results
-                ResultSet results = sql.executeQuery();
-                
-                while (results.next())
-                {
-                    // Get the users password from the results of the query
-                    passwordEntered = results.getString("password");
-                    out.write("GOT THE PASSWORD FOR USER => " + user.getUserID() + " WITH PASSWORD => " + passwordEntered + "\n");
-                    out.write("THEY ENTERED THE PASSWORD => " + request.getParameter("password") + "\n");
-                }
-                
-                // Close connections
-                sql.close();
-                connection.close();
-            }
-            catch (SQLException e)
+            // Check that the user hasn't left any fields empty (REDIRECT TO LOGIN AND PROMPT USER TO ENTER ENTER ALL FIELDS)
+            if (user.getUserID().equals("") || user.getPassword().equals(""))
             {
-                out.write("Exception Thrown: " + e.getMessage() + "\n");
-                out.write("Stack Trace: " + e.getStackTrace() + "\n");
-            }            
-            catch (ClassNotFoundException e)
-            {
-                out.write("Exception Thrown: " + e.getMessage() + "\n");
-                out.write("Stack Trace: " + e.getStackTrace() + "\n");
+                // Get the current session
+                session = request.getSession();
+                
+                // Set an attribute for empty login fields (For prompting user to fill out entire form)
+                session.setAttribute("loginFieldEmpty", true);
+                
+                response.sendRedirect("/Login");
+                
+                // Return (Don't allow them to register unless all fields were entered)
+                return;
             }
-            
-            // Verify User Credentials HERE!!! Make sure the password returned from the database is not empty!
-            if (!passwordEntered.isEmpty())
-            {
-                // If password in DB matches password entered for the userID entered, they are authenticated (for this app anyways..)
-                authenticated = passwordEntered.equals(user.getPassword());
-            }
-            
-            // Create an HttpSession
-            HttpSession session = request.getSession();
-            
-            // Set account Attribute to the users unique userID and registered/loggedin Attribute to true
-            session.setAttribute("account", request.getParameter("userID"));
-            session.setAttribute("loggedin", true);
-           
-            // Send User To /Home After Identity Verified!!!
-            if (loginSubmitted && authenticated)
-            {
-                response.sendRedirect("/Home");        
-            }
+            // User entered information into ALL fields, proceed (ALL FIELDS WERE ENTERED - PROCEED WITH CHECKS)
             else
-            {
-                // Now that I can check userID with password entered vs password in DB, check the variables in Login.jsp to make it show failed
-                // If the passwords DONT match, but if they do match just let them redirect to home!
-                out.write("Passwords do NOT match! Password in DB => " + passwordEntered + " Password entered in Login => " + request.getParameter("password"));
+            {  
+                try
+                {                
+                    // Establish Database Connection - Creates Database & Table If not already Created
+                    Connection connection = DatabaseConnection.initializeDatabase();
+                    
+                    // Create Template Statement for querying the Database for the user's information based on userID
+                    PreparedStatement sqlCheckUserPassword = connection.prepareStatement("select * from `users` where userID = ?");
+                    
+                    // Add the userID field to the select statement
+                    sqlCheckUserPassword.setString(1, user.getUserID());
+                    
+                    // Execute the sql query and get the results
+                    ResultSet results = sqlCheckUserPassword.executeQuery();
+                    
+                    // If the query returned results, get the password for the user
+                    if (results.next())
+                    {
+                        // Set authenticated to true if the password entered matches the password in DB
+                        authenticated = user.getPassword().equals(results.getString("password"));
+                        
+                        // Close sqlCheckUserPassword connection
+                        sqlCheckUserPassword.close();
+                    }
+                   
+                    // Check if the user has been authenticated to login
+                    if (authenticated)
+                    {
+                        // Create a new session for the logged in user
+                        session = request.getSession(true);
+                        
+                        // Set account Attribute to the users unique userID and registered/loggedin Attribute to true
+                        session.setAttribute("account", request.getParameter("userID"));
+                        session.setAttribute("loggedin", true);
+                        
+                        response.sendRedirect("/Home");        
+                    }
+                    else
+                    {
+                        // Get the current session
+                        session = request.getSession();
+                        
+                        // Set an attribute for incorrect userID or Password (For prompting user to retry logging in with correct info)
+                        session.setAttribute("incorrectIdOrPassword", true);
+                        
+                        response.sendRedirect("/Login");
+                
+                        // Return (Don't allow them to register unless all fields were entered)
+                        return;
+                    }
+                    
+                    connection.close();
+                    
+                }
+                catch (SQLException e)
+                {
+                    out.write("Exception Thrown: " + e.getMessage() + "\n");
+                    out.write("Stack Trace: " + e.getStackTrace() + "\n");
+                }            
+                catch (ClassNotFoundException e)
+                {
+                    out.write("Exception Thrown: " + e.getMessage() + "\n");
+                    out.write("Stack Trace: " + e.getStackTrace() + "\n");
+                }
             }
-        }
-        else
-        {
-            // If either of the fields, userID or password are empty, log it.
-            out.write("PLEASE FILL IN BOTH FIELDS, USERID AND PASSWORD! \n");
         }
     }
 }
