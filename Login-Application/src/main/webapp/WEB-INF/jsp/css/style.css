@@ -51,8 +51,17 @@
 	padding-right: 45px;
 }
 
+.form-button-container {
+    width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .form-button {
-	width: 115px;
+	width: 180px;
 	display: block;
 	margin: 30px auto 15px auto;
 	padding: 10px;

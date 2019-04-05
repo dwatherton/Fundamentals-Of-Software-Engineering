@@ -41,8 +41,12 @@
 						<input class="form-control" type="password" name="password" placeholder="Password">
 					</div>
 				</div>
-
-				<input class="form-button" type="submit" name="login" value="Login">
+                
+                <div class="form-button-container">
+    				<input class="form-button" type="submit" name="login" value="Login">
+    				
+    				<input class="form-button" type="submit" name="forgotPassword" value="Forgot Password?">
+    			</div>
 
 			</section>
 		</form>

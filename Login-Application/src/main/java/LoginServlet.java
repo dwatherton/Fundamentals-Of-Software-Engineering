@@ -50,12 +50,23 @@ public class LoginServlet extends HttpServlet
     
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        PrintWriter out = response.getWriter();
-        boolean loginSubmitted = request.getParameter("login").equals("Login");
         // Create an HttpSession for Login
         HttpSession session = request.getSession();
+        PrintWriter out = response.getWriter();
+        boolean loginSubmitted = false;
+        boolean forgotPassword = false;
         boolean authenticated = false;
         String passwordEntered = "";
+        
+        // Check which button user selected, whichever is selected will not be null, and thus set to true so the request can be handled
+        if (request.getParameter("login") != null)
+        {
+            loginSubmitted = request.getParameter("login").equals("Login");
+        }
+        else if (request.getParameter("forgotPassword") != null)
+        {
+            forgotPassword = request.getParameter("forgotPassword").equals("Forgot Password?");
+        }
         
         // Check the user clicked Login
         if (loginSubmitted)
@@ -148,6 +159,12 @@ public class LoginServlet extends HttpServlet
                     out.write("Stack Trace: " + e.getStackTrace() + "\n");
                 }
             }
+        }
+        // If the user didn't click login, check if they hit the Forgot Password? button
+        else if (forgotPassword)
+        {
+            // Send the user to the Forgot Password Page
+            response.sendRedirect("/Home");
         }
     }
 }
