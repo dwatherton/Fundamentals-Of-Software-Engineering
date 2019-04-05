@@ -37,5 +37,15 @@
 		<servlet-name>Logout</servlet-name>
 		<url-pattern>/Logout</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+	   <servlet-name>ForgotPassword</servlet-name>
+	   <servlet-class>ForgotPasswordServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ForgotPassword</servlet-name>
+        <url-pattern>/ForgotPassword</url-pattern>
+    </servlet-mapping>
 
 </web-app>

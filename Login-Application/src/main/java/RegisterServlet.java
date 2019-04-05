@@ -85,6 +85,7 @@ public class RegisterServlet extends HttpServlet
             }
             // User entered information into ALL fields, proceed (ALL FIELDS WERE ENTERED - PROCEED WITH CHECKS)
             else
+            
             {
                 try
                 {                

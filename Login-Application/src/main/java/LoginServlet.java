@@ -164,7 +164,7 @@ public class LoginServlet extends HttpServlet
         else if (forgotPassword)
         {
             // Send the user to the Forgot Password Page
-            response.sendRedirect("/Home");
+            response.sendRedirect("/ForgotPassword");
         }
     }
 }
