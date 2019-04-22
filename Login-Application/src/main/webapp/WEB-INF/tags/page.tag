@@ -43,9 +43,9 @@
 							<li> <a href="${pageContext.request.contextPath}/Logout">Logout</a> </li>
 						</c:when>
 						<c:otherwise>
-							<%-- When user is not logged in show Register as active nav button if uri ends with "/Register" and Login as active nav button if uri ends with "/Login" or "/ForgotPassword" --%>
+							<%-- When user is not logged in show Register as active nav button if uri ends with "/Register", and show Login as active nav button if uri ends with "/Login" or "/ForgotPassword" --%>
 							<li <c:if test="${fn:endsWith(uri,'Register')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Register">Register</a> </li>
-							<li <c:if test="${fn:endsWith(uri,'Login')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Login">Login</a> </li>
+							<li <c:if test="${fn:endsWith(uri,'Login') || fn:endsWith(uri,'ForgotPassword')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Login">Login</a> </li>
 						</c:otherwise>
 					</c:choose>
 			</ul>
