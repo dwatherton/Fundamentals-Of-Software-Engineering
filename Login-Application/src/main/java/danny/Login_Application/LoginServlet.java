@@ -26,11 +26,11 @@ public class LoginServlet extends HttpServlet
         // Get the current HttpSession
         HttpSession session = request.getSession();
 
-        // Set loginFieldEmpty for making sure user entered ALL fields in Login Form (Changes Login page content)
+        // Set loginFieldEmpty for making sure User entered ALL fields in Login Form (Changes Login page content)
         Boolean loginFieldEmpty = (Boolean)session.getAttribute("loginFieldEmpty");
         request.setAttribute("loginFieldEmpty", loginFieldEmpty);
         
-        // Set incorrectIdOrPassword for making sure user entered the correct login info (Changes Login page content)
+        // Set incorrectIdOrPassword for making sure User entered the correct login info (Changes Login page content)
         Boolean incorrectIdOrPassword = (Boolean)session.getAttribute("incorrectIdOrPassword");
         request.setAttribute("incorrectIdOrPassword", incorrectIdOrPassword);
         
@@ -66,7 +66,7 @@ public class LoginServlet extends HttpServlet
         // Create forgotPasswordSubmitted variable for checking if the User clicked the Forgot Password? Button
         boolean forgotPassword = false;
         
-        // Create authenticated variable for checking if the User entered info has been verified with the Server
+        // Create authenticated variable for checking if the User entered info has been verified with the Database info
         boolean authenticated = false;
         
         // Create passwordEntered variable for checking that the User entered password matches the password in the Database
@@ -179,7 +179,7 @@ public class LoginServlet extends HttpServlet
                 }
             }
         }
-        // If the user didn't click the Login Button, check if they clicked the Forgot Password? Button
+        // If the User didn't click the Login Button, check if they clicked the Forgot Password? Button
         else if (forgotPassword)
         {
             // Redirect the User to the Forgot Password Page

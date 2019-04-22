@@ -81,14 +81,14 @@ public class ForgotPasswordServlet extends HttpServlet
             user.setSecurityQuestion(request.getParameter("securityQuestion"));
             user.setSecurityAnswer(request.getParameter("securityAnswer"));
             
-            // Check if the user has left any Forgot Password fields empty
+            // Check if the User has left any Forgot Password fields empty
             if (user.getUserID().equals("") || user.getSecurityQuestion().equals("") || user.getSecurityAnswer().equals("")
                 || request.getParameter("newPassword").equals("") || request.getParameter("confirmPassword").equals(""))
             {
                 // Get the current HttpSession
                 session = request.getSession();
                 
-                // Set an HttpSession attribute forgotPasswordFieldEmpty to True (For prompting the User to fill out entire form)
+                // Set an HttpSession Attribute forgotPasswordFieldEmpty to True (For prompting the User to fill out entire form)
                 session.setAttribute("forgotPasswordFieldEmpty", true);
 
                 // Redirect the User back to /ForgotPassword to try Resetting their password again               

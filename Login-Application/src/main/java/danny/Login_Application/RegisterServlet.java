@@ -134,8 +134,8 @@ public class RegisterServlet extends HttpServlet
                         // Close sqlAddUser connection
                         sqlAddUser.close();
                         
-                        // Get the current session
-                        session = request.getSession();
+                        // Create a new HttpSession for the Registered User
+                        session = request.getSession(true);
                         
                         // Set HttpSession Attributes to the User's information and registered/loggedin Attributes to true
                         session.setAttribute("account", request.getParameter("userID"));
@@ -153,8 +153,8 @@ public class RegisterServlet extends HttpServlet
                     // The UserID entered is already taken
                     else
                     {
-                        // Create a new HttpSession
-                        session = request.getSession(true);
+                        // Get the Current HttpSession
+                        session = request.getSession();
                         
                         // Set an HttpSession Attribute userID taken (For prompting User to enter a new userID and try Registering again)
                         session.setAttribute("userIdTaken", true);
