@@ -1,3 +1,5 @@
+package danny.Login_Application;
+
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

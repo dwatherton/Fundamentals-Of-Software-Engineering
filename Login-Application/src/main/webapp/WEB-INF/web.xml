@@ -3,7 +3,7 @@
 
 	<servlet>
 		<servlet-name>Home</servlet-name>
-		<servlet-class>HomeServlet</servlet-class>
+		<servlet-class>danny.Login_Application.HomeServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Home</servlet-name>
@@ -12,7 +12,7 @@
 
 	<servlet>
 		<servlet-name>Register</servlet-name>
-		<servlet-class>RegisterServlet</servlet-class>
+		<servlet-class>danny.Login_Application.RegisterServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Register</servlet-name>
@@ -21,7 +21,7 @@
 
 	<servlet>
 		<servlet-name>Login</servlet-name>
-		<servlet-class>LoginServlet</servlet-class>
+		<servlet-class>danny.Login_Application.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Login</servlet-name>
@@ -30,7 +30,7 @@
 
 	<servlet>
 		<servlet-name>Logout</servlet-name>
-		<servlet-class>LogoutServlet</servlet-class>
+		<servlet-class>danny.Login_Application.LogoutServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
@@ -40,7 +40,7 @@
 	
 	<servlet>
 	   <servlet-name>ForgotPassword</servlet-name>
-	   <servlet-class>ForgotPasswordServlet</servlet-class>
+	   <servlet-class>danny.Login_Application.ForgotPasswordServlet</servlet-class>
     </servlet>
     
     <servlet-mapping>
