@@ -33,11 +33,8 @@ public class DatabaseConnection
         PreparedStatement createTable = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `users` (userID VARCHAR(120) NOT NULL, password VARCHAR(120) NOT NULL, name VARCHAR(120) NOT NULL, securityQuestion VARCHAR(120) NOT NULL, securityAnswer VARCHAR(120) NOT NULL, PRIMARY KEY(userID));");
         createTable.executeUpdate();
         createTable.close();
-        
-        // Potential Solution for persistence - Upon Registration, Save User info to file, then parse the file here
-        // looping through each line, and create an sql statement to insert a user into the db with the values
-        // read in from file
 
+        // Return the Database Connection
         return connection;
     }
 }

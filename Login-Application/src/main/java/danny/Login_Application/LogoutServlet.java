@@ -11,21 +11,21 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LogoutServlet")
 public class LogoutServlet extends HttpServlet
 {
-    static final long serialVersionUID = 4L;
- 
+    private static final long serialVersionUID = 4L;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // Get current HttpSession
+        // Get the current HttpSession
         HttpSession session = request.getSession();
         
-        // Invalidate current session
+        // Invalidate the current HttpSession (Log the User out) 
         session.invalidate();
         
-        // Create new session
+        // Create new HttpSession
         session = request.getSession(true);
         
-        // Send user to /Home
+        // Redirect the Logged Out User to /Home (Send to Homepage after Log out)
         response.sendRedirect("/Home"); 
     }
 }

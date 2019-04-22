@@ -11,26 +11,35 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "HomeServlet") 
 public class HomeServlet extends HttpServlet
 {
-    static final long serialVersionUID = 1L;
-    public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/home.jsp";
- 
+    private static final long serialVersionUID = 1L;
+
+    public static final String JSP_VIEW_PATH = "/WEB-INF/jsp/home.jsp";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        // Get the current HttpSession
         HttpSession session = request.getSession();
-        String account = (String)session.getAttribute("account");
-        Boolean registered = (Boolean)session.getAttribute("registered");
-        Boolean loggedin = (Boolean)session.getAttribute("loggedin");
+        
+        // Set account for the User (userID if User is Logged In, null if User is not - Changes Home page content) 
+        String account = (String) session.getAttribute("account");
         request.setAttribute("account", account);
+        
+        // Set registered for the User (True if User is Registered, null if User is not - Changes Home page content)
+        Boolean registered = (Boolean) session.getAttribute("registered");
         request.setAttribute("registered", registered);
+        
+        // Set loggedin for the User (True if User is Logged In. null if User is not - Changes Home page content)
+        Boolean loggedin = (Boolean) session.getAttribute("loggedin");
         request.setAttribute("loggedin", loggedin);
 
-        // Invalidate session if not logged in (Clears the variables set for ERROR messages on Registration and Login forms)
+        // Invalidate HttpSession if NOT Logged In (Clear any HttpSession Atributes set)
         if (session.getAttribute("loggedin") == null)
         {
             session.invalidate();
         }
 
-        request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
+        // Forward HttpRequests and HttpResponses to home.jsp (Tie this Servlet to it's respective JSP View)
+        request.getRequestDispatcher(JSP_VIEW_PATH).forward(request, response);
     }
 }

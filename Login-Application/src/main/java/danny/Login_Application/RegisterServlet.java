@@ -16,30 +16,34 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "RegisterServlet")
 public class RegisterServlet extends HttpServlet
 {
-    private static final long serialVersionUID = 2L;    
-    public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/register.jsp";
- 
+    private static final long serialVersionUID = 2L;
+
+    public static final String JSP_VIEW_PATH = "/WEB-INF/jsp/register.jsp";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // Get the current session
+        // Get the current HttpSession
         HttpSession session = request.getSession();
         
-        // Set registrationFieldEmpty for making sure user entered ALL fields
+        // Set registrationFieldEmpty for making sure User entered ALL fields in Registration Form (Changes Registration page content)
         Boolean registrationFieldEmpty = (Boolean)session.getAttribute("registrationFieldEmpty");
         request.setAttribute("registrationFieldEmpty", registrationFieldEmpty);
         
-        // Set userIdTaken for making sure the userID entered is not already taken
+        // Set userIdTaken for making sure the userID entered is not already taken (Changes Registration page content)
         Boolean userIdTaken = (Boolean)session.getAttribute("userIdTaken");
         request.setAttribute("userIdTaken", userIdTaken);
         
-        // Invalidate session if user failed to login then came to register (Clears the variables set for ERROR messages on Login form )
-        if (session.getAttribute("loginFieldEmpty") != null || session.getAttribute("incorrectIdOrPassword") != null)
+        // Invalidate HttpSession if User failed to login or reset password then came to register (Clear any HttpSession Attributes set)
+        if (session.getAttribute("loginFieldEmpty") != null || session.getAttribute("incorrectIdOrPassword") != null
+            || session.getAttribute("forgotPasswordFieldEmpty") != null || session.getAttribute("incorrectRecoveryInfo") != null
+            || session.getAttribute("passwordsDoNotMatch") != null)
         {
             session.invalidate();
         }
         
-        request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
+        // Forward HttpRequests and HttpResponses to register.jsp (Tie this Servlet to it's respective JSP View)
+        request.getRequestDispatcher(JSP_VIEW_PATH).forward(request, response);
     }
     
     @Override
@@ -50,17 +54,22 @@ public class RegisterServlet extends HttpServlet
     
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        PrintWriter out = response.getWriter();
-        boolean registrationSubmitted = request.getParameter("register").equals("Register");
-        // Create an HttpSession for Registration
+        // Get the current HttpSession
         HttpSession session = request.getSession();
         
-        // Check user clicked Register
+        // Get the HttpResponses PrintWriter for printing Servlet and IO Exceptions to screen
+        PrintWriter out = response.getWriter();
+        
+        // Create registrationSubmitted variable for checking if the User clicked the Register Button
+        boolean registrationSubmitted = request.getParameter("register").equals("Register");
+        
+        // If the User Clicked the Register Button
         if (registrationSubmitted)
         {
+            // Invalidate HttpSession (Clear any HttpSession Attributes set)
             session.invalidate();
             
-            // Create a user from the registration information
+            // Create a User object from the Registration form information
             User user = new User();
             user.setUserID(request.getParameter("userID"));
             user.setPassword(request.getParameter("password"));
@@ -68,23 +77,24 @@ public class RegisterServlet extends HttpServlet
             user.setSecurityQuestion(request.getParameter("securityQuestion"));
             user.setSecurityAnswer(request.getParameter("securityAnswer"));
             
-            // Check that the user hasn't left any fields empty (REDIRECT TO REGISTER AND PROMPT USER TO ENTER ENTER ALL FIELDS)
+            // Check if the User has left any Registration Fields empty
             if (user.getUserID().equals("") || user.getPassword().equals("")
                 || user.getName().equals("") || user.getSecurityQuestion().equals("")
                 || user.getSecurityAnswer().equals(""))
             {
-                // Get the current session
+                // Get the current HttpSession
                 session = request.getSession();
                 
-                // Set an attribute for empty registration fields (For prompting user to fill out entire form)
+                // Set an HttpSession Attribute registrationFieldEmpty to True (For prompting the User to fill out the entire form)
                 session.setAttribute("registrationFieldEmpty", true);
                 
+                // Redirect the User back to /Register to try Registering again
                 response.sendRedirect("/Register");
                 
-                // Return (Don't allow them to register unless all fields were entered)
+                // Return (Don't allow them to Register unless all fields were entered - bare minimum)
                 return;
             }
-            // User entered information into ALL fields, proceed (ALL FIELDS WERE ENTERED - PROCEED WITH CHECKS)
+            // User entered information into ALL Registration fields, proceed with Registration
             else
             
             {
@@ -93,25 +103,25 @@ public class RegisterServlet extends HttpServlet
                     // Establish Database Connection - Creates Database & Table If not already Created
                     Connection connection = DatabaseConnection.initializeDatabase();
                     
-                    // Create Template for Statement with 1 entry for userID
+                    // Create Template Statement for Querying the Database for the userID entered (To check if User entered userID is unique)
                     PreparedStatement sqlCheckUniqueUser = connection.prepareStatement("select * from `users` where userID = ?");
                     
-                    // Add the userID field to the select statement
+                    // Add the userID field to the Query Statement
                     sqlCheckUniqueUser.setString(1, user.getUserID());
                     
-                    // Execute the sql query and get the results
+                    // Execute the SQL Query and get the results
                     ResultSet results = sqlCheckUniqueUser.executeQuery();
                     
-                    // If no results were found, the userID has not been taken (USERID IS UNIQUE - PROCEED)
+                    // If the Query returned no results, the userID has not been taken (userID is unique - proceed with Registration)
                     if (!results.next()) 
                     {
                         // Close sqlCheckUniqeUser connection
                         sqlCheckUniqueUser.close();
                     
-                        // Create Template for Statement with 5 Columns in user table
+                        // Create Template Statement for inserting a new User into the Database
                         PreparedStatement sqlAddUser = connection.prepareStatement("insert into `users` values(?, ?, ?, ?, ?)");
                         
-                        // Add the five fields inserted to the registration into the insert statement
+                        // Add the five fields inserted into the Registration form to the SQL insert statement
                         sqlAddUser.setString(1, user.getUserID());
                         sqlAddUser.setString(2, user.getPassword());
                         sqlAddUser.setString(3, user.getName());
@@ -127,7 +137,7 @@ public class RegisterServlet extends HttpServlet
                         // Get the current session
                         session = request.getSession();
                         
-                        // Set account Attribute to the users unique userID and registered/loggedin Attribute to true
+                        // Set HttpSession Attributes to the User's information and registered/loggedin Attributes to true
                         session.setAttribute("account", request.getParameter("userID"));
                         session.setAttribute("registered", true);
                         session.setAttribute("loggedin", true);
@@ -137,24 +147,26 @@ public class RegisterServlet extends HttpServlet
                         session.setAttribute("securityQuestion", user.getSecurityQuestion());
                         session.setAttribute("securityAnswer", user.getSecurityAnswer());
                         
-                        // Redirect user to /Home
+                        // Redirect the User to /Home (New User Registered)
                         response.sendRedirect("/Home");
                     }
-                    // The UserID entered is already taken (REDIRECT TO REGISTER AND PROMPT USER TO ENTER A DIFFERENT USERID)
+                    // The UserID entered is already taken
                     else
                     {
-                        // Create a new session for the registered user
+                        // Create a new HttpSession
                         session = request.getSession(true);
                         
-                        // Set an attribute for user ID taken (For prompting user to enter a new userID)
+                        // Set an HttpSession Attribute userID taken (For prompting User to enter a new userID and try Registering again)
                         session.setAttribute("userIdTaken", true);
                         
+                        // Redirect the User back to /Register to try Registering again 
                         response.sendRedirect("/Register");
                         
-                        // Return (Don't allow them to register unless all fields were entered)
+                        // Return (Don't allow them to Register unless userID was unique)
                         return;
                     }
                     
+                    // Close Database Connection
                     connection.close();   
                 }
                 catch (SQLException e)

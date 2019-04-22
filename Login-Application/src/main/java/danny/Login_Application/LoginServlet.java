@@ -16,31 +16,34 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LoginServlet")
 public class LoginServlet extends HttpServlet
 {
-    static final long serialVersionUID = 3L;
-    
-    public static final String VIEW_TEMPLATE_PATH = "/WEB-INF/jsp/login.jsp";
- 
+    private static final long serialVersionUID = 3L;
+
+    public static final String JSP_VIEW_PATH = "/WEB-INF/jsp/login.jsp";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // Get the current session
+        // Get the current HttpSession
         HttpSession session = request.getSession();
 
-        // Set loginFieldEmpty for making sure user entered ALL fields
+        // Set loginFieldEmpty for making sure user entered ALL fields in Login Form (Changes Login page content)
         Boolean loginFieldEmpty = (Boolean)session.getAttribute("loginFieldEmpty");
         request.setAttribute("loginFieldEmpty", loginFieldEmpty);
         
-        // Set incorrectIdOrPassword for making sure user entered the correct login info
+        // Set incorrectIdOrPassword for making sure user entered the correct login info (Changes Login page content)
         Boolean incorrectIdOrPassword = (Boolean)session.getAttribute("incorrectIdOrPassword");
         request.setAttribute("incorrectIdOrPassword", incorrectIdOrPassword);
         
-        // Invalidate session if user failed to register then came to login (Clears the variables set for ERROR messages on Registration form)
-        if (session.getAttribute("registrationFieldEmpty") != null || session.getAttribute("userIdTaken") != null)
+        // Invalidate HttpSession if User failed to register or reset password then came to login (Clear any HttpSession Attributes set) 
+        if (session.getAttribute("registrationFieldEmpty") != null || session.getAttribute("userIdTaken") != null
+            || session.getAttribute("forgotPasswordFieldEmpty") != null || session.getAttribute("incorrectRecoveryInfo") != null
+            || session.getAttribute("passwordsDoNotMatch") != null)
         {
             session.invalidate();
         }
         
-        request.getRequestDispatcher(VIEW_TEMPLATE_PATH).forward(request, response);
+        // Forward HttpRequests and HttpResponses to login.jsp (Tie this Servlet to it's respective JSP View)
+        request.getRequestDispatcher(JSP_VIEW_PATH).forward(request, response);
     }
     
     @Override
@@ -51,15 +54,25 @@ public class LoginServlet extends HttpServlet
     
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // Create an HttpSession for Login
+        // Get the current HttpSession
         HttpSession session = request.getSession();
+        
+        // Get the HttpResponses PrintWriter for printing Servlet and IO Exceptions to screen
         PrintWriter out = response.getWriter();
+        
+        // Create loginSubmitted variable for checking if the User clicked the Login Button
         boolean loginSubmitted = false;
+        
+        // Create forgotPasswordSubmitted variable for checking if the User clicked the Forgot Password? Button
         boolean forgotPassword = false;
+        
+        // Create authenticated variable for checking if the User entered info has been verified with the Server
         boolean authenticated = false;
+        
+        // Create passwordEntered variable for checking that the User entered password matches the password in the Database
         String passwordEntered = "";
         
-        // Check which button user selected, whichever is selected will not be null, and thus set to true so the request can be handled
+        // Check which button the User selected (Selected Button will NOT be null, so the respective variable is set to True)
         if (request.getParameter("login") != null)
         {
             loginSubmitted = request.getParameter("login").equals("Login");
@@ -69,31 +82,33 @@ public class LoginServlet extends HttpServlet
             forgotPassword = request.getParameter("forgotPassword").equals("Forgot Password?");
         }
         
-        // Check the user clicked Login
+        // If the User Clicked the Login Button
         if (loginSubmitted)
         {
+            // Invalidate HttpSession (Clear any HttpSession Attributes set)
             session.invalidate();
             
-            // Create a user from the login information
+            // Create a User object from the Login form information
             User user = new User();
             user.setUserID(request.getParameter("userID"));
             user.setPassword(request.getParameter("password"));
             
-            // Check that the user hasn't left any fields empty (REDIRECT TO LOGIN AND PROMPT USER TO ENTER ENTER ALL FIELDS)
+            // Check if the User has left any Login Fields empty
             if (user.getUserID().equals("") || user.getPassword().equals(""))
             {
-                // Get the current session
+                // Get the current HttpSession
                 session = request.getSession();
                 
-                // Set an attribute for empty login fields (For prompting user to fill out entire form)
+                // Set an HttpSession Attribute loginFieldEmpty to True (For prompting the User to fill out the entire form)
                 session.setAttribute("loginFieldEmpty", true);
                 
+                // Redirect the User back to /Login to try Logging In again
                 response.sendRedirect("/Login");
                 
-                // Return (Don't allow them to register unless all fields were entered)
+                // Return (Don't allow them to Login unless all fields were entered - bare minimum)
                 return;
             }
-            // User entered information into ALL fields, proceed (ALL FIELDS WERE ENTERED - PROCEED WITH CHECKS)
+            // User entered information into ALL Login fields, proceed with Login
             else
             {  
                 try
@@ -101,53 +116,56 @@ public class LoginServlet extends HttpServlet
                     // Establish Database Connection - Creates Database & Table If not already Created
                     Connection connection = DatabaseConnection.initializeDatabase();
                     
-                    // Create Template Statement for querying the Database for the user's information based on userID
+                    // Create Template Statement for Querying the Database for the User's information based on userID (To authenticate User)
                     PreparedStatement sqlCheckUserPassword = connection.prepareStatement("select * from `users` where userID = ?");
                     
-                    // Add the userID field to the select statement
+                    // Add the userID field to the Query Statement
                     sqlCheckUserPassword.setString(1, user.getUserID());
                     
-                    // Execute the sql query and get the results
+                    // Execute the SQL Query and get the results
                     ResultSet results = sqlCheckUserPassword.executeQuery();
                     
-                    // If the query returned results, get the password for the user
+                    // If the Query returned results, try to authenticate the password for the User (a Registered User exists - proceed with Login)
                     if (results.next())
                     {
-                        // Set authenticated to true if the password entered matches the password in DB
+                        // Set authenticated to True if the password entered matches the password in the Database
                         authenticated = user.getPassword().equals(results.getString("password"));
                         
                         // Close sqlCheckUserPassword connection
                         sqlCheckUserPassword.close();
                     }
                    
-                    // Check if the user has been authenticated to login
+                    // If the User has been authenticated to Login
                     if (authenticated)
                     {
-                        // Create a new session for the logged in user
+                        // Create a new HttpSession for the Logged In User
                         session = request.getSession(true);
                         
-                        // Set account Attribute to the users unique userID and registered/loggedin Attribute to true
+                        // Set account HttpSession Attribute to the Users unique userID and loggedin Attribute to True
                         session.setAttribute("account", request.getParameter("userID"));
                         session.setAttribute("loggedin", true);
                         
+                        // Redirect the User to /Home (User Logged In)
                         response.sendRedirect("/Home");        
                     }
+                    // User has NOT been authenticated to Login
                     else
                     {
-                        // Get the current session
+                        // Get the current HttpSession
                         session = request.getSession();
                         
-                        // Set an attribute for incorrect userID or Password (For prompting user to retry logging in with correct info)
+                        // Set an HttpSession Attribute for incorrect userID or password (For prompting User to retry Logging In with correct info)
                         session.setAttribute("incorrectIdOrPassword", true);
                         
+                        // Redirect the User back to /Login to try Logging In again
                         response.sendRedirect("/Login");
                 
-                        // Return (Don't allow them to register unless all fields were entered)
+                        // Return (Don't allow them to Login unless they have been authenticated)
                         return;
                     }
-                    
+
+                    // Close Database Connection                    
                     connection.close();
-                    
                 }
                 catch (SQLException e)
                 {
@@ -161,10 +179,10 @@ public class LoginServlet extends HttpServlet
                 }
             }
         }
-        // If the user didn't click login, check if they hit the Forgot Password? button
+        // If the user didn't click the Login Button, check if they clicked the Forgot Password? Button
         else if (forgotPassword)
         {
-            // Send the user to the Forgot Password Page
+            // Redirect the User to the Forgot Password Page
             response.sendRedirect("/ForgotPassword");
         }
     }
