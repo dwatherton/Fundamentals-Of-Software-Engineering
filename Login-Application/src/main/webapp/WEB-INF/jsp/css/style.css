@@ -1,11 +1,12 @@
-/* For overriding some of the BootStrap CDN styles with my own */
-
-
+/***    Main Styles     ***/
+.app-description {
+    padding-top: 25px;
+    font-size: 18px;
+}
 
 
 
 /***    Jumbotron Styles    ***/
-
 .jumbotron {
     display: flex;
     flex-wrap: wrap;
@@ -20,10 +21,7 @@
 
 
 
-
-
 /***    Form Styles    ***/
-
 .form-container {
 	padding: 10px;
 }
