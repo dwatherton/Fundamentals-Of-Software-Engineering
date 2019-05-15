@@ -7,7 +7,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Home</servlet-name>
-		<url-pattern>/Home</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -37,15 +37,15 @@
 		<servlet-name>Logout</servlet-name>
 		<url-pattern>/Logout</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
-	   <servlet-name>ForgotPassword</servlet-name>
-	   <servlet-class>danny.Login_Application.ForgotPasswordServlet</servlet-class>
-    </servlet>
-    
-    <servlet-mapping>
-        <servlet-name>ForgotPassword</servlet-name>
-        <url-pattern>/ForgotPassword</url-pattern>
-    </servlet-mapping>
+		<servlet-name>ForgotPassword</servlet-name>
+		<servlet-class>danny.Login_Application.ForgotPasswordServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ForgotPassword</servlet-name>
+		<url-pattern>/ForgotPassword</url-pattern>
+	</servlet-mapping>
 
 </web-app>

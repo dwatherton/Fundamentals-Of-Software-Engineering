@@ -6,7 +6,7 @@
     <artifactId>Login_Application</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    
+
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -22,7 +22,8 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.38</version>
+            <version>8.0.15</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -31,7 +32,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
- 
+
     <build>
         <defaultGoal>install</defaultGoal>
         <finalName>Login_Application</finalName>
@@ -41,10 +42,14 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
+                    <url>http://localhost:8080/manager/text</url>
+                    <server>TomcatServer</server>
                     <path>/${project.build.finalName}</path>
+                    <username>user</username>
+                    <password>pass</password>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

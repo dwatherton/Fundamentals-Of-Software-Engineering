@@ -3,7 +3,7 @@ package danny.Login_Application;
 import lombok.Data;
 
 @Data
-public class User
+class User
 {
     private String userID;
     private String password;

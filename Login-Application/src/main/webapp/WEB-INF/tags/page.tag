@@ -35,7 +35,7 @@
 				<%-- Set variable 'uri' for checking the servlet jsp view that the user is currently on --%>
 				<c:set var="uri" value="${requestScope['javax.servlet.forward.request_uri']}" />
 				<%-- Show Home as the active nav button if uri ends with "/Home" --%>
-				<li <c:if test="${fn:endsWith(uri,'Home')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Home">Home</a> </li>
+				<li <c:if test="${fn:endsWith(uri,'Login_Application/Home') || fn:endsWith(uri,'Login_Application/')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Home">Home</a> </li>
 					<%-- Change upper right nav buttons depending on if the user is logged in or not --%>
 					<c:choose>
 						<c:when test="${!empty account}">
@@ -44,8 +44,8 @@
 						</c:when>
 						<c:otherwise>
 							<%-- When user is not logged in show Register as active nav button if uri ends with "/Register", and show Login as active nav button if uri ends with "/Login" or "/ForgotPassword" --%>
-							<li <c:if test="${fn:endsWith(uri,'Register')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Register">Register</a> </li>
-							<li <c:if test="${fn:endsWith(uri,'Login') || fn:endsWith(uri,'ForgotPassword')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Login">Login</a> </li>
+							<li <c:if test="${fn:endsWith(uri,'Login_Application/Register')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Register">Register</a> </li>
+							<li <c:if test="${fn:endsWith(uri,'Login_Application/Login') || fn:endsWith(uri,'Login_Application/ForgotPassword')}"> class="active" </c:if>> <a href="${pageContext.request.contextPath}/Login">Login</a> </li>
 						</c:otherwise>
 					</c:choose>
 			</ul>
